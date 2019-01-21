@@ -2,8 +2,8 @@
 
  Network Library for Games :
 
- date    : 01/20/2019
- version : V0.6.3
+ date    : 01/21/2019
+ version : V0.6.4
 
 ----------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------
@@ -27,29 +27,21 @@ Removed :
 
 ----------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------
-Minor Update V0.6.2
+Minor Update V0.6.3
 -------------------
 
 Added :
-- Ping for keeping connections alive
-- Send broadcast on a non localhost local network
-
-Fixed :
-- File transfered with lot of white spaces
-- Collisions between two thread using the same socket
-- (In example) all clients was controlling all characters
-
-
-Minor Update V0.6.3
--------------------
-- (In example) Game simulation for server only configuration
-- (in example) New player will no more spawn on other players
 - Multiple servers can now be open on the same machine
-- Multiple servers on the same machines are no more blended
+- (In example) Game simulation for server only configuration
 - User can now call GetNotRespondingConnections that return all the 
   connections that seems down, so the user can handle what to do in this case
-- User can now refuse connection int the newConnection callback
+- User can now refuse connection in the newConnection callback
 - The expected disconnections are now handle correctly from both side
+
+Fixed :
+- Multiple servers on the same machines are no more blended
+- (in example) New player will no more spawn on other players
+
 
 ----------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------
@@ -59,5 +51,6 @@ Minor Update V0.6.3
  - Transfered files can only contains ascii caracters
  - Servers and clients crash when unexpeted disconnection
  - If a connection is refused, the client is still syncro before being disconnected
+ - Disconnections crash the client (and the server ?)
 
  ----------------------------------------------------------------------------------
