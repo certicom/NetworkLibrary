@@ -1,6 +1,8 @@
 # NetworkLibrary
 Network Library for games based on the SFML network module.
 
+### This library require SFML2 to be compiled
+
 This library is a small module on top of the SFML one.
 
 This allow to create clients, servers and to syncronize all the game with the least number a line possible
