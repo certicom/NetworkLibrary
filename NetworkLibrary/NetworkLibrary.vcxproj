@@ -127,10 +127,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="ChangeLog.txt" />
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="Command.cpp" />
     <ClCompile Include="Communication.cpp" />

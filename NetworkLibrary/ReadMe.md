@@ -1,6 +1,6 @@
 
 ------------------------------------------------------------------------------------------------------------------------
-HOW TO USE THE LIBRAIRY :
+HOW TO USE THE LIBRARY :
 -----------------------------
 
 #### Infos :
@@ -12,8 +12,8 @@ When this function is called the new object will be automatically created for al
 At the end of the application, you must use the ShutDownAllCommunications function in order to properly close everything.  
 
 #### Example :
-To complete those information an exemple is included. So you look in the main.cpp and playerObject.cpp files to better understand how it works.  
-(ExampleCore.cpp is just for displaying the example there is nothing really intersting in it)  
+To complete those information an exemple is included. So you can look in the main.cpp and playerObject.cpp files to better understand how it works.  
+(ExampleCore.cpp is just for displaying the example there is nothing really intersting in it and it is hard coded)  
 
 #### Create server :
 To create a server you just have to call the StartServer function (See documentation of StartServer)  
@@ -50,7 +50,7 @@ If the server exist it will appear in the AvailableServers list.
 You can only connect to a server you know. The servers that accept connections will broacast their informations on the local network and you can use CheckServerExistance to find a non local server. 
 All the servers you know are in the AvailableServers list. To connect to one of them, you need to call Client::Connect with the corresponding InfoServer as parameter. (For now it is recommended to connect with TCP protocol by add true in second parameter)  
 
-#### #### Do something :
+#### Do something :
 All objects inherited from NetworkObjet must override the function ReceiveCommand(Net::Command&).  
 Clients can not really do anything, so in order to inform the server that you want to do something, you must send a command, if this command is accepted.  
 it will be resend to this exact object on all clients, so you also must be able to understand this command in the ReceiveCommand function. (see read/write command)  
@@ -94,8 +94,6 @@ FEATURES THAT WILL SOON BE ADDED :
  - UDP full support
  - No more forced default constructor for network objects (interesting fact in C++ this is impossible because of what are the variadic functions)
  - Fully implemented object update system (with working network priority)
- - Proper disconnection by sending the information
- - End user interface to end a connection
  - Thread for loading the initial data when connected
  - Clock syncronization
  - Nice and simple way to not send data to all clients (In the anti cheat way)

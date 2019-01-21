@@ -145,7 +145,7 @@ void UdpHandler::UdpThread(UdpHandler* a_handler)
 					
 				if (l_port != 0) // TODO : why do we receive 0 when connections are down ??
 				{
-					std::cout << "New slave: " << l_port << std::endl;
+					std::cout << std::endl << "New slave: " << l_port << std::endl;
 					a_handler->m_slavesPorts.push_back(l_port); // TODO : no duplicates
 				}
 			}
