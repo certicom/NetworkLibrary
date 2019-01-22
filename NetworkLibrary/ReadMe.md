@@ -52,8 +52,8 @@ All the servers you know are in the AvailableServers list. To connect to one of 
 
 #### Do something :
 All objects inherited from NetworkObjet must override the function ReceiveCommand(Net::Command&).  
-Clients can not really do anything, so in order to inform the server that you want to do something, you must send a command, if this command is accepted.  
-it will be resend to this exact object on all clients, so you also must be able to understand this command in the ReceiveCommand function. (see read/write command)  
+Clients can not really do anything, so in order to inform the server that you want to do something, you must send a command.  
+If this command is accepted, it will be resend to this exact object on all clients, so you also must be able to understand this command in the ReceiveCommand function. (see read/write command)  
 
 #### Read command :
 Undestand a command is simple because you know the content of the sending command since your must write it yourself.  

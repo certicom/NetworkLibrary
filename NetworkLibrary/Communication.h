@@ -19,7 +19,7 @@
 ////////////////////////////////////////////////////////////
 // Headers
 ////////////////////////////////////////////////////////////
-#include "StaticHeader.h"
+#include "stdafx.h"
 
 //#include "NetworkEnums.h" // (included in Command)
 //#include "NetworkData.h" // (included in Command)
@@ -40,7 +40,7 @@ namespace Net
 /// \see Net::InternalComm
 ///
 ////////////////////////////////////////////////////////////
-class Communication
+class NET Communication
 {
 public:
 

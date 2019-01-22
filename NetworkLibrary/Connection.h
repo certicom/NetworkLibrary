@@ -19,7 +19,7 @@
 ////////////////////////////////////////////////////////////
 // Headers
 ////////////////////////////////////////////////////////////
-#include "StaticHeader.h"
+#include "stdafx.h"
 
 #include "NetworkEnums.h"
 
@@ -36,7 +36,7 @@ namespace Net
 /// TODO : is user allowed to use it ?  decide - structure or private access ?
 ///
 ////////////////////////////////////////////////////////////
-class Connection
+class NET Connection
 {
 
 public:

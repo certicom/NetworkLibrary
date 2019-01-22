@@ -18,7 +18,7 @@
 ////////////////////////////////////////////////////////////
 // Headers
 ////////////////////////////////////////////////////////////
-#include "StaticHeader.h"
+#include "stdafx.h"
 
 //#include "NetworkEnums.h" //(included in server)
 //#include "Communication.h" //(included in server)
@@ -40,7 +40,7 @@ namespace Net
 /// available servers automatically
 ///
 ////////////////////////////////////////////////////////////
-class Client
+class NET Client
 {
 
 public:
