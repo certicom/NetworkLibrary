@@ -19,7 +19,7 @@
 ////////////////////////////////////////////////////////////
 // Headers
 ////////////////////////////////////////////////////////////
-#include "StaticHeader.h"
+#include "stdafx.h"
 
 //#include "NetworkEnums.h" // (included in Communication)
 //#include "NetworkData.h" // (included in Communication)
@@ -43,7 +43,7 @@ namespace Net
 /// isListening is activate, it allow client to simply find and connect
 ///
 ////////////////////////////////////////////////////////////
-class Server
+class NET Server
 {
 
 public:

@@ -19,7 +19,7 @@
 ////////////////////////////////////////////////////////////
 // Headers
 ////////////////////////////////////////////////////////////
-#include "StaticHeader.h"
+#include "stdafx.h"
 
 #include "Command.h"
 #include "InfoServer.h"
@@ -50,7 +50,7 @@ typedef NetworkObject* (*FactoryMethod)();
 /// server and the client can do both.
 ///
 ////////////////////////////////////////////////////////////
-class InternalComm
+class NET InternalComm
 {
 public:
 

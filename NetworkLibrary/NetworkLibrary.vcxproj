@@ -26,7 +26,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
@@ -76,6 +76,8 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>D:\SFML-2.4.1 VCC\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;NETWORKLIBRARY_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>Use</PrecompiledHeader>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>D:\SFML-2.4.1 VCC\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -102,6 +104,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>D:\SFML-2.4.1 VCC\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>Use</PrecompiledHeader>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -118,6 +121,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>D:\SFML-2.4.1 VCC\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>Use</PrecompiledHeader>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -132,14 +136,14 @@
     <ClCompile Include="Communication.cpp" />
     <ClCompile Include="Connection.cpp" />
     <ClCompile Include="Data.cpp" />
-    <ClCompile Include="ExampleCore.cpp" />
     <ClCompile Include="InternalComm.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="UdpHandler.cpp" />
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="NetworkData.cpp" />
     <ClCompile Include="NetworkObject.cpp" />
     <ClCompile Include="NetworkStruct.cpp" />
-    <ClCompile Include="PlayerObject.cpp" />
     <ClCompile Include="Server.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -149,7 +153,6 @@
     <ClInclude Include="Communication.h" />
     <ClInclude Include="Connection.h" />
     <ClInclude Include="Data.h" />
-    <ClInclude Include="ExampleCore.h" />
     <ClInclude Include="InfoServer.h" />
     <ClInclude Include="InternalComm.h" />
     <ClInclude Include="UdpHandler.h" />
@@ -158,9 +161,8 @@
     <ClInclude Include="NetworkLibrary.h" />
     <ClInclude Include="NetworkObject.h" />
     <ClInclude Include="NetworkStruct.h" />
-    <ClInclude Include="PlayerObject.h" />
     <ClInclude Include="Server.h" />
-    <ClInclude Include="StaticHeader.h" />
+    <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

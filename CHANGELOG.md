@@ -2,8 +2,8 @@
 
  Network Library for Games :
 
- date    : 01/21/2019
- version : V0.6.4
+ date    : 01/22/2019
+ version : V0.6.5
 
 ----------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------
@@ -27,7 +27,7 @@ Removed :
 
 ----------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------
-Minor Update V0.6.4
+Minor Update V0.6.5
 -------------------
 
 Added :
@@ -41,6 +41,10 @@ Added :
 Fixed :
 - Multiple servers on the same machines are no more blended
 - (in example) New player will no more spawn on other players
+
+Improvements :
+- Now the project generate a real dynamic library
+- The project uses a precompiled header that greatly improve compilation time
 
 
 ----------------------------------------------------------------------------------

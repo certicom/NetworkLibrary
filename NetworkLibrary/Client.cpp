@@ -11,7 +11,7 @@
 // to not alter this notice and to not misrepresent the author.
 //
 ////////////////////////////////////////////////////////////
-
+#include "stdafx.h"
 #include "Client.h"
 
 namespace Net

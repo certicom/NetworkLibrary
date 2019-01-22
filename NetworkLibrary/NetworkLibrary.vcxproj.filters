@@ -7,15 +7,6 @@
     <Filter Include="Sources">
       <UniqueIdentifier>{6e126c99-47f9-4de5-ad51-fe41dae1f158}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Exemples">
-      <UniqueIdentifier>{3e017fb4-9102-4cc6-a8f6-94e284821cf4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Exemples\Headers">
-      <UniqueIdentifier>{43c8370d-01ba-4bb3-b3f4-cbc971fc7db4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Exemples\Sources">
-      <UniqueIdentifier>{958bced3-0013-4ad9-aea4-129b0079547f}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -45,19 +36,13 @@
     <ClCompile Include="Server.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerObject.cpp">
-      <Filter>Exemples\Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="main.cpp">
-      <Filter>Exemples\Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="ExampleCore.cpp">
-      <Filter>Exemples\Sources</Filter>
-    </ClCompile>
     <ClCompile Include="NetworkStruct.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="UdpHandler.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
   </ItemGroup>
@@ -98,22 +83,16 @@
     <ClInclude Include="Server.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="StaticHeader.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayerObject.h">
-      <Filter>Exemples\Headers</Filter>
-    </ClInclude>
     <ClInclude Include="NetworkLibrary.h">
       <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="ExampleCore.h">
-      <Filter>Exemples\Headers</Filter>
     </ClInclude>
     <ClInclude Include="NetworkStruct.h">
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="UdpHandler.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>

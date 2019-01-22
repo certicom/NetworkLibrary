@@ -18,7 +18,7 @@
 ////////////////////////////////////////////////////////////
 // Headers
 ////////////////////////////////////////////////////////////
-#include "StaticHeader.h"
+#include "stdafx.h"
 
 //#include "NetworkEnums.h" // (included in network data)
 //#include "Data.h" // (included in network data)
@@ -36,7 +36,7 @@ namespace Net
 /// to be automatically syncronized with the server and all clients
 ///
 ////////////////////////////////////////////////////////////
-class NetworkObject
+class NET NetworkObject
 {
 
 public:
