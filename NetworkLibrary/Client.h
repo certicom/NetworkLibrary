@@ -28,6 +28,7 @@
 #include "ClientStat.h"
 
 #include "UdpHandler.h"
+#include "FileTransfer.h"
 
 namespace Net
 {
@@ -139,8 +140,10 @@ public:
 	///
 	/// \param a_fileName the file name
 	///
+	/// \return The file in transfert, this is an async operation
+	///
 	////////////////////////////////////////////////////////////
-	void SendFile(const std::string& a_fileName);
+	FileTransfer* SendFile(const std::string& a_fileName);
 
 	////////////////////////////////////////////////////////////
 	/// \brief Receive a part of a file
@@ -173,6 +176,22 @@ public:
 	///
 	////////////////////////////////////////////////////////////
 	void CloseConnection();
+
+	////////////////////////////////////////////////////////////
+	/// \brief Send a part of a file coming from a file transfert
+	///
+	/// \param a_packet Some data of the file
+	///
+	////////////////////////////////////////////////////////////
+	void SendPartialFile(sf::Packet& a_packet);
+
+	////////////////////////////////////////////////////////////
+	/// \brief Get the list of all received files on the client
+	///
+	/// \return the list of all received files on the client
+	///
+	////////////////////////////////////////////////////////////
+	const std::map<std::string, FileTransfer*>& GetReceivedFiles() const;
 
 private:
 
@@ -317,6 +336,8 @@ private:
 	sf::Clock m_clock; ///< The clock of the client
 
 	UdpHandler m_udpSystem; ///< The system that handle all the udp communication
+
+	std::map<std::string, FileTransfer*> m_receivedFiles; ///< The list of all the files that the client has received
 };
 
 }

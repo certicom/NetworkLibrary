@@ -165,9 +165,12 @@ PROTOCOLS USED FOR COMMUNICATION AND TRANSMITTING OBJECTS :
 
 ##### Protocol for file transfert (Not the real FTP of course^^):
  2 bool: start file  
- 3 string: file name  
+ 3 string: file name
+ 4 bool: has failed
+ if start file    
+ 5 Uint32: file size
  if not start file  
- 4 char: all the file  
+ 5 char: all the file  
 
 ##### Protocol for ping
  3 Int32: Current time uncorrected  

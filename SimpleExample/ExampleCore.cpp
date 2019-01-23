@@ -5,10 +5,15 @@ char LastChar(char a_char);
 
 bool hasFocus(bool a_focus = false, bool erase = false);
 
+bool Clic(bool a_clic = false, bool a_erase = false);
+
+
 void EventHandler(sf::RenderWindow& a_window)
 {
 
 	LastChar(0);
+
+	Clic(false, true);
 
 	sf::Event event;
 	while (a_window.pollEvent(event))
@@ -31,6 +36,14 @@ void EventHandler(sf::RenderWindow& a_window)
 		if (event.type == sf::Event::GainedFocus)
 		{
 			hasFocus(true, true);
+		}
+
+		if (event.type == sf::Event::MouseButtonPressed)
+		{
+			if (event.mouseButton.button == sf::Mouse::Left)
+			{
+				Clic(true, true);
+			}
 		}
 		
 	}
@@ -147,17 +160,28 @@ void DisplayLoop(sf::RenderWindow& a_window, Net::Client* a_client)
 		{
 			a_window.draw(l_rectangleInput);
 
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+			if (Clic())
 			{
 				switch (i)
 				{
-				case 1: a_client->CloseConnection(); break;
-				case 2: break;
+				case 1: a_client->CloseConnection();   break;
+				case 2: a_client->SendFile("font.ttf"); break;
 				case 3: break;
 				case 4: break;
 				case 5: break;
 				}
 			}
+
+			switch (i)
+			{
+			case 1: l_word = "Disconnection"; break;
+			case 2: l_word = "Transfert file"; break;
+			case 3: l_word = "None";  break;
+			case 4: l_word = "None";  break;
+			case 5: l_word = "None";  break;
+			}
+
+			WriteSomething(l_word, sf::Vector2f(localPosition.x, localPosition.y), a_window, 15);
 		}
 	}
 
@@ -219,7 +243,6 @@ void DisplayLoop(sf::RenderWindow& a_window, Net::Client* a_client)
 				if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 				{
 					Net::Communication::CheckServerExistance(l_ipField);
-					//a_client->SendFile("yyg.txt");
 
 					l_ipFieldIsFocus = false;
 					l_ipField.resize(0);
@@ -430,4 +453,15 @@ bool hasFocus(bool a_focus, bool erase)
 		s_focus = a_focus;
 
 	return l_focus;
+}
+
+
+bool Clic(bool a_clic, bool a_erase)
+{
+	static bool s_clic = false;
+
+	if (a_erase)
+		s_clic = a_clic;
+
+	return s_clic;
 }

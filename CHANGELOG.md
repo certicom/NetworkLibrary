@@ -2,8 +2,8 @@
 
  Network Library for Games :
 
- date    : 01/22/2019
- version : V0.6.5
+ date    : 01/23/2019
+ version : V0.6.6
 
 ----------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------
@@ -27,24 +27,16 @@ Removed :
 
 ----------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------
-Minor Update V0.6.5
+Minor Update V0.6.6
 -------------------
 
 Added :
-- Multiple servers can now be open on the same machine
-- (In example) Game simulation for server only configuration
-- User can now call GetNotRespondingConnections that return all the 
-  connections that seems down, so the user can handle what to do in this case
-- User can now refuse connection in the newConnection callback
-- The expected disconnections are now handle correctly from both side
+- File transfert are now handle as async operation
 
 Fixed :
-- Multiple servers on the same machines are no more blended
-- (in example) New player will no more spawn on other players
+- File transfert is now correctly handle and can transfert large files
 
-Improvements :
-- Now the project generate a real dynamic library
-- The project uses a precompiled header that greatly improve compilation time
+
 
 
 ----------------------------------------------------------------------------------

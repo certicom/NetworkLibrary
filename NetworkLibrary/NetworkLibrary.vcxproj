@@ -136,6 +136,7 @@
     <ClCompile Include="Communication.cpp" />
     <ClCompile Include="Connection.cpp" />
     <ClCompile Include="Data.cpp" />
+    <ClCompile Include="FileTransfer.cpp" />
     <ClCompile Include="InternalComm.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -153,6 +154,7 @@
     <ClInclude Include="Communication.h" />
     <ClInclude Include="Connection.h" />
     <ClInclude Include="Data.h" />
+    <ClInclude Include="FileTransfer.h" />
     <ClInclude Include="InfoServer.h" />
     <ClInclude Include="InternalComm.h" />
     <ClInclude Include="UdpHandler.h" />
