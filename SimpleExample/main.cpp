@@ -9,7 +9,7 @@
 
 
 // You can change the current configuration by chosing one of these tree
-#define NETWORK_CONFIG CLIENT_AND_SERVER // SERVER_ONLY || CLIENT_ONLY || CLIENT_AND_SERVER
+#define NETWORK_CONFIG CLIENT_ONLY // SERVER_ONLY || CLIENT_ONLY || CLIENT_AND_SERVER
 
 
 void InitInstanciableTypes()

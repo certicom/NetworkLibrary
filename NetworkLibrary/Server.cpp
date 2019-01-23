@@ -263,7 +263,9 @@ void Server::SendPacket(sf::Packet& a_packet)
 ///
 ////////////////////////////////////////////////////////////
 void Server::SendPacketToOneClient(sf::Packet& a_packet, Connection* a_client)
-{	
+{
+	m_udpSystem.WaitForLock(); // thread safe TODO : lock in SendSocket when possible
+
 	if (a_client->m_isUDPConnection) // UDP
 	{
 		m_udpSystem.GetUdpSocket().send(a_packet, a_client->m_ipAddress, a_client->m_port);
@@ -272,6 +274,8 @@ void Server::SendPacketToOneClient(sf::Packet& a_packet, Connection* a_client)
 	{
 		a_client->m_TCPSocket.send(a_packet);
 	}
+
+	m_udpSystem.Unlock();
 }
 
 
@@ -633,6 +637,18 @@ void Server::HandleOldClients()
 }
 
 
+////////////////////////////////////////////////////////////
+/// \brief Send a file that will be syncronized on all the clients
+///
+/// \param a_fileName the file name
+///
+/// \return The file in transfert, this is an async operation
+///
+////////////////////////////////////////////////////////////
+FileTransfer* Server::SyncronizeFile(const std::string& a_fileName)
+{
+	return new FileTransfer(a_fileName, this);
+}
 
 ////////////////////////////////////////////////////////////
 /// \brief Receive and reflect a part of a file
@@ -646,6 +662,7 @@ void Server::ReceiveFile(sf::Packet& a_packet, Connection* a_idUser)
 {
 	// TODO : add a way to control the incoming file, because the client must be able to send a file too
 
+	// we arrive in this function only if a client try to syncro a file on other clients
 	for (Connection* client : m_clients)
 	{
 		if (client != a_idUser)
@@ -654,6 +671,17 @@ void Server::ReceiveFile(sf::Packet& a_packet, Connection* a_idUser)
 		}
 	}
 
+}
+
+////////////////////////////////////////////////////////////
+/// \brief Send a part of a file coming from a file transfert
+///
+/// \param a_packet Some data of the file
+///
+////////////////////////////////////////////////////////////
+void Server::SendPartialFile(sf::Packet& a_packet)
+{
+	SendPacket(a_packet);
 }
 
 

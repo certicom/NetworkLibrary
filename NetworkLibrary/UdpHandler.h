@@ -71,6 +71,10 @@ public:
 	////////////////////////////////////////////////////////////
 	sf::Uint16 GetUdpPort();
 
+	void WaitForLock();
+
+	void Unlock();
+
 	////////////////////////////////////////////////////////////
 	/// \brief Stop the listener thread of the master if it is
 	/// running on this application
@@ -113,6 +117,8 @@ private:
 	sf::UdpSocket m_UdpSocketForSlaves; ///< The socket that listen for slaves presence from master side
 
 	sf::Uint16 m_port; ///< The port used to communicate with this entity
+
+	std::mutex m_mutex; ///< Lock for avoiding collisions when sending a lot of data
 };
 }
 

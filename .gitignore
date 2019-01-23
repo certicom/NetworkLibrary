@@ -1,7 +1,8 @@
 /.vs/
 /Debug/
+SimpleExample/Debug/
 /NetworkLibrary/Debug
 /NetworkLibrary.VC.VC.opendb
 /NetworkLibrary.VC.db
 /NetworkLibrary/NetworkLibrary.vcxproj.user
-/NetworkLibrary/SimpleExample/Debug
+

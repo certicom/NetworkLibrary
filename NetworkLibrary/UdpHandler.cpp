@@ -86,6 +86,17 @@ sf::UdpSocket& UdpHandler::GetUdpSocket()
 	return m_UdpSocket;
 }
 
+
+void UdpHandler::WaitForLock()
+{
+	m_mutex.lock();
+}
+
+void UdpHandler::Unlock()
+{
+	m_mutex.unlock();
+}
+
 ////////////////////////////////////////////////////////////
 /// \brief Get the port selected among the available ports
 /// to make sure we can communicate without collisions

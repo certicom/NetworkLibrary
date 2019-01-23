@@ -65,6 +65,10 @@ Client::~Client()
 
 		m_clientThread.join(); // we now expect that the thread will end soon
 	}
+
+
+	for (std::pair<std::string, FileTransfer*> file : m_receivedFiles)
+		delete file.second;
 }
 
 
@@ -108,6 +112,8 @@ const std::string& Client::GetName() const
 ////////////////////////////////////////////////////////////
 void Client::SendPacket(sf::Packet& a_packet)
 {
+	m_udpSystem.WaitForLock(); // thread safe
+
 	m_stats.m_emittedPackets++;
 	
 	if (m_server.m_isUDPConnection) // UDP
@@ -118,6 +124,8 @@ void Client::SendPacket(sf::Packet& a_packet)
 	{
 		m_server.m_TCPSocket.send(a_packet);
 	}
+
+	m_udpSystem.Unlock();
 }
 
 
@@ -142,6 +150,17 @@ void Client::SendCommand(NetworkData& a_data, sf::Uint16 a_customCommand)
 	InternalComm::WriteCommand(l_packet, a_data);
 
 	SendPacket(l_packet);
+}
+
+////////////////////////////////////////////////////////////
+/// \brief Send a part of a file coming from a file transfert
+///
+/// \param a_packet Some data of the file
+///
+////////////////////////////////////////////////////////////
+void Client::SendPartialFile(sf::Packet& a_packet)
+{
+	SendPacket(a_packet);
 }
 
 
@@ -464,51 +483,24 @@ void Client::ReceiveBroadcast(sf::Packet& a_packet, sf::IpAddress& a_serverSourc
 ///
 /// \param a_fileName the file name
 ///
+/// \return The file in transfert, this is an async operation
+///
 ////////////////////////////////////////////////////////////
-void Client::SendFile(const std::string& a_fileName)
+FileTransfer* Client::SendFile(const std::string& a_fileName)
 {
-	std::ifstream l_file(a_fileName, std::ios::in);
+	return new FileTransfer(a_fileName, this);
+}
 
-	if (l_file) // open the file
-	{
-		char l_char;
 
-		sf::Packet l_packet;
-
-		int l_currentPacketSize = 0;
-
-		// send a fisrt packet with just the name of the file
-		l_packet << (sf::Uint16)CT_File << true << a_fileName;
-		SendPacket(l_packet);
-
-		while (l_file.get(l_char)) // while there is still a character in the file
-		{
-			if (l_currentPacketSize == 0) // init the packet
-			{
-				l_packet = sf::Packet();
-
-				l_packet << (sf::Uint16)CT_File << false << a_fileName;
-			}
-			l_packet << l_char; // add the char in the packet
-
-			l_currentPacketSize++; // imcremente the size
-
-			if (l_currentPacketSize >= 256) // if we have reach the maximum size
-			{
-				SendPacket(l_packet); // send the packet
-
-				l_currentPacketSize = 0; // reset the packet
-			}
-		}
-
-		if(l_currentPacketSize != 0) // handle a non complete packet
-			SendPacket(l_packet); 
-
-		l_file.close();
-	}
-
-	else
-		throw NetworkException("Error : Can not open the file");
+////////////////////////////////////////////////////////////
+/// \brief Get the list of all received files on the client
+///
+/// \return the list of all received files on the client
+///
+////////////////////////////////////////////////////////////
+const std::map<std::string, FileTransfer*>& Client::GetReceivedFiles() const
+{
+	return m_receivedFiles;
 }
 
 
@@ -528,29 +520,17 @@ void Client::ReceiveFile(sf::Packet& a_packet)
 
 	if (l_startFile)
 	{
-		std::ofstream l_file(l_fileName);
-		l_file.close();
+		sf::Uint32 l_fileSize;
+
+		a_packet >> l_fileSize;
+
+		m_receivedFiles[l_fileName] = new FileTransfer(l_fileName, l_fileSize); // TODO : handle the case where the file already exist
 	}
 	else
 	{
-		std::ofstream l_file(l_fileName, std::ofstream::app);
-
-		if (l_file)
-		{
-			int l_count = 0;
-			sf::Int8 l_char;
-			while (a_packet >> l_char)
-			{
-				l_count++;
-				if (l_count % 4 == 0) // TODO : understand why we receive 32bits data instead of 8
-				{
-					l_file.put(l_char);
-				}
-			}
-				
-			l_file.close();
-		}
+		m_receivedFiles[l_fileName]->ReceivePacket(a_packet);
 	}
+
 }
 
 
