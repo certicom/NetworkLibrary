@@ -30,6 +30,7 @@ FileTransfer::FileTransfer(const std::string& a_fileName, Client* a_senderEntity
 {
 	m_client = a_senderEntity;
 	m_server = NULL;
+	m_receiver = NULL;
 
 	Init();
 
@@ -43,11 +44,15 @@ FileTransfer::FileTransfer(const std::string& a_fileName, Client* a_senderEntity
 ///
 /// \param a_senderEntity The server that send the file
 ///
+/// \param a_receiver Optionaly, we can specify a connection
+/// where to send the file. If NULL everyone will receive
+///
 ////////////////////////////////////////////////////////////
-FileTransfer::FileTransfer(const std::string& a_fileName, Server* a_senderEntity) : m_fileName(a_fileName)
+FileTransfer::FileTransfer(const std::string& a_fileName, Server* a_senderEntity, Connection* a_receiver) : m_fileName(a_fileName)
 {
 	m_client = NULL;
 	m_server = a_senderEntity;
+	m_receiver = a_receiver;
 
 	Init();
 
@@ -67,12 +72,13 @@ FileTransfer::FileTransfer(const std::string& a_fileName, int a_fileSize) : m_fi
 {
 	m_client = NULL;
 	m_server = NULL;
+	m_receiver = NULL;
 
 	Init();
 
 	m_totalBits = a_fileSize;
 
-	m_file = std::ofstream(m_fileName);
+	m_file = std::ofstream(m_fileName, std::ios::out | std::ios::binary);
 
 	if (!m_file)
 		m_hasFailed = true;
@@ -104,7 +110,7 @@ FileTransfer::~FileTransfer()
 
 ////////////////////////////////////////////////////////////
 /// \brief Must be called when this transfert receive a
-/// new packet full a data to add to the file
+/// new packet full of data to add to the file
 ///
 /// \param a_packet the packet full of data
 ///
@@ -151,12 +157,14 @@ void FileTransfer::ReceivePacket(sf::Packet a_packet)
 ///
 /// \param a_packet the packet to send
 ///
+/// \param a_receiver The receiver, if NULL send it to everyone
+///
 ////////////////////////////////////////////////////////////
-void FileTransfer::SendPacket(sf::Packet& a_packet)
+void FileTransfer::SendPacket(sf::Packet& a_packet, Connection* a_receiver)
 {
 	if (m_server != NULL)
 	{
-		m_server->SendPartialFile(a_packet);
+		m_server->SendPartialFile(a_packet, a_receiver);
 	}
 	else if(m_client != NULL) // or just else ?
 	{
@@ -172,7 +180,7 @@ void FileTransfer::TransfertThread(FileTransfer* a_transfert)
 {
 	a_transfert->m_isTransfering = true;
 
-	std::ifstream l_file(a_transfert->m_fileName, std::ios::in);
+	std::ifstream l_file(a_transfert->m_fileName, std::ios::in | std::ios::binary);
 
 	l_file.seekg(0, std::ios::end);  // go to the end
 	sf::Uint32 l_fileSize = l_file.tellg(); // get the current position
@@ -187,8 +195,8 @@ void FileTransfer::TransfertThread(FileTransfer* a_transfert)
 		int l_currentPacketSize = 0;
 
 		// send a fisrt packet with just the name of the file
-		l_packet << (sf::Uint16)CT_File << true << a_transfert->m_fileName << l_fileSize;
-		a_transfert->SendPacket(l_packet);
+		l_packet << (sf::Uint16)CT_File << true << a_transfert->m_fileName << l_fileSize << GetExecutablePath();
+		a_transfert->SendPacket(l_packet, a_transfert->m_receiver);
 
 		while (l_file.get(l_char) && a_transfert->m_isTransfering) // while there is still a character in the file
 		{
@@ -202,9 +210,9 @@ void FileTransfer::TransfertThread(FileTransfer* a_transfert)
 
 			l_currentPacketSize++; // imcremente the size
 
-			if (l_currentPacketSize >= 8192) // if we have reach the maximum size TODO : what is the best size ?? 2^13
+			if (l_currentPacketSize >= 8192) // if we have reach the maximum size TODO : what is the best size ?? 2^13 seems nice
 			{
-				a_transfert->SendPacket(l_packet); // send the packet
+				a_transfert->SendPacket(l_packet, a_transfert->m_receiver); // send the packet
 
 				a_transfert->m_completion = ((float)l_file.tellg() / l_fileSize) * 100.0f;
 
@@ -214,7 +222,7 @@ void FileTransfer::TransfertThread(FileTransfer* a_transfert)
 
 		if (l_currentPacketSize != 0 && a_transfert->m_isTransfering) // handle a non complete packet
 		{
-			a_transfert->SendPacket(l_packet);
+			a_transfert->SendPacket(l_packet, a_transfert->m_receiver);
 			a_transfert->m_completion = 100.0f;
 		}
 			
@@ -263,6 +271,34 @@ void FileTransfer::StopTransfert()
 		m_file.close();
 
 }
+
+
+////////////////////////////////////////////////////////////
+/// \brief Get the global path of the .exe
+///
+/// \return the global path of the application
+///
+////////////////////////////////////////////////////////////
+const std::string FileTransfer::GetExecutablePath()
+{
+	char  szPath[MAX_PATH];
+
+	// Retrieve the full path for the current module.
+	if (GetModuleFileName(NULL, szPath, sizeof szPath) == 0)
+	{
+		return "";
+	}
+
+	std::string str(szPath);
+
+	str.resize(str.find_last_of('\\'));
+
+	return str;
+}
+
+
+
+
 
 ////////////////////////////////////////////////////////////
 /// \brief Get if the transfert is complete and was sucessfull

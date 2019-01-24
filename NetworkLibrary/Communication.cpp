@@ -70,6 +70,33 @@ void Communication::SetNewConnectionCallback(void(*a_newConnectionCallback)(Conn
 
 
 ////////////////////////////////////////////////////////////
+/// \brief Add a file taht will be syncronized on each client 
+/// that will connect
+/// if the server.exe and the client.exe are in the same
+/// repertory, this will not append (because already here)
+///
+/// \param a_filePath the path of the file to syncronize
+///
+////////////////////////////////////////////////////////////
+void Communication::AddSyncronizedFile(const std::string& a_filePath)
+{
+	InternalComm::AddSyncronizedFile(a_filePath);
+}
+
+////////////////////////////////////////////////////////////
+/// \brief If a file was already be syncronized, but that
+/// it receive some important changes, this will resyncronize
+/// all the file on all clients
+
+/// \param a_filePath the path of the file to syncronize
+///
+////////////////////////////////////////////////////////////
+void Communication::ResyncronizeFile(const std::string& a_filePath)
+{
+	InternalComm::ResyncronizeFile(a_filePath);
+}
+
+////////////////////////////////////////////////////////////
 /// \brief start a new client 
 ///
 /// TODO : handle the case where there is already a running client

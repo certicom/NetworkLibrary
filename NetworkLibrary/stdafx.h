@@ -31,6 +31,7 @@
 #include <list>
 #include <queue>
 #include <type_traits>
+#include <unordered_set>
 
 // TODO : to remove
 #include <array>

@@ -9,7 +9,7 @@
 
 
 // You can change the current configuration by chosing one of these tree
-#define NETWORK_CONFIG CLIENT_ONLY // SERVER_ONLY || CLIENT_ONLY || CLIENT_AND_SERVER
+#define NETWORK_CONFIG SERVER_ONLY // SERVER_ONLY || CLIENT_ONLY || CLIENT_AND_SERVER
 
 
 void InitInstanciableTypes()
@@ -18,6 +18,11 @@ void InitInstanciableTypes()
 	// etc...
 }
 
+void InitSyncronizedFiles()
+{
+	Net::Communication::AddSyncronizedFile("Map_level_1.map");
+	// etc...
+}
  
 
 // Usefull only from server side
@@ -37,12 +42,14 @@ void NewConnectionCallBack(Net::Connection* a_connection)
 
 
 
-
 int main()
 {
 
 	Net::Communication::SetNewConnectionCallback(NewConnectionCallBack);
+
 	InitInstanciableTypes();
+	InitSyncronizedFiles();
+	
 
 #if NETWORK_CONFIG == SERVER_ONLY || NETWORK_CONFIG == CLIENT_AND_SERVER
 	

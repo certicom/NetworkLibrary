@@ -138,6 +138,28 @@ public:
 	////////////////////////////////////////////////////////////
 	static void AddOrUpdateInfoServer(InfoServer* a_infoServer);
 
+
+	////////////////////////////////////////////////////////////
+	/// \brief Add a file taht will be syncronized on each client 
+	/// that will connect
+	/// if the server.exe and the client.exe are in the same
+	/// repertory, this will not append (because already here)
+	///
+	/// \param a_filePath the path of the file to syncronize
+	///
+	////////////////////////////////////////////////////////////
+	static void AddSyncronizedFile(const std::string& a_filePath);
+
+	////////////////////////////////////////////////////////////
+	/// \brief If a file was already be syncronized, but that
+	/// it receive some important changes, this will resyncronize
+	/// all the file on all clients
+
+	/// \param a_filePath the path of the file to syncronize
+	///
+	////////////////////////////////////////////////////////////
+	static void ResyncronizeFile(const std::string& a_filePath);
+
 	////////////////////////////////////////////////////////////
 	/// \brief Write an object data in a packet for transmition
 	/// this uses the Object Protocol (Read Me)
@@ -290,6 +312,14 @@ public:
 
 
 	////////////////////////////////////////////////////////////
+	/// \brief get the list of all files that must be syncronized
+	///
+	/// \return the list of all files that must be syncronized
+	///
+	////////////////////////////////////////////////////////////
+	static std::unordered_set<std::string>& GetSyncronizedFiles();
+
+	////////////////////////////////////////////////////////////
 	/// \brief get the list of all not responding connections
 	/// it can be client as well as server
 	///
@@ -395,6 +425,8 @@ private:
 	static std::vector<InfoServer*> s_availableServers; ///< The list of all the servers that currently broacasting
 
 	static std::vector<InfoServer*> s_availableServersCustom; ///< Same list as s_availableServers, but store the result of the previous request for variable persistancy
+
+	static std::unordered_set<std::string> s_syncronizedFiles; ///< The list of all files that must be syncronized on all clients
 
 	static Server* s_server; ///< Server singleton for now, remember the running server on this application
 

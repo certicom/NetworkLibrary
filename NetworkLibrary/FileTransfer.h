@@ -29,7 +29,7 @@ namespace Net
 
 	class Client;
 	class Server;
-
+	class Connection;
 
 ////////////////////////////////////////////////////////////
 /// \brief This class is able to handle a file transfert
@@ -59,8 +59,11 @@ public:
 	///
 	/// \param a_senderEntity The server that send the file
 	///
+	/// \param a_receiver Optionaly, we can specify a connection
+	/// where to send the file. If NULL everyone will receive
+	///
 	////////////////////////////////////////////////////////////
-	FileTransfer(const std::string& a_fileName, Server* a_senderEntity);
+	FileTransfer(const std::string& a_fileName, Server* a_senderEntity, Connection* a_receiver = NULL);
 
 	////////////////////////////////////////////////////////////
 	/// \brief This constructor is for receiving file
@@ -111,12 +114,20 @@ public:
 
 	////////////////////////////////////////////////////////////
 	/// \brief Must be called when this transfert receive a
-	/// new packet full a data to add to the file
+	/// new packet full of data to add to the file
 	///
 	/// \param a_packet the packet full of data
 	///
 	////////////////////////////////////////////////////////////
 	void ReceivePacket(sf::Packet a_packet);
+
+	////////////////////////////////////////////////////////////
+	/// \brief Get the global path of the .exe
+	///
+	/// \return the global path of the application
+	///
+	////////////////////////////////////////////////////////////
+	static const std::string GetExecutablePath();
 
 private:
 
@@ -137,8 +148,10 @@ private:
 	///
 	/// \param a_packet the packet to send
 	///
+	/// \param a_receiver The receiver, if NULL send it to everyone
+	///
 	////////////////////////////////////////////////////////////
-	void SendPacket(sf::Packet& a_packet);
+	void SendPacket(sf::Packet& a_packet, Connection* a_receiver);
 
 
 	////////////////////////////////////////////////////////////
@@ -164,6 +177,8 @@ private:
 	Client* m_client; ///< If we use a client to make the file transfert
 
 	Server* m_server; ///< If we use a server to make the file transfert
+
+	Connection* m_receiver; ///< The specific receiver of this transfert, if NULL everyone will receive it
 
 	std::ofstream m_file; ///< If we are in receiving mode, this is the opened file
 };

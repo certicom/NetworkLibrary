@@ -73,6 +73,9 @@ Server::~Server()
 
 	for (Connection* connection : m_clients) // TODO : send an end of connection message
 		delete connection;
+
+	for (FileTransfer* transfert : m_transferts)
+		delete transfert;
 }
 
 
@@ -638,19 +641,6 @@ void Server::HandleOldClients()
 
 
 ////////////////////////////////////////////////////////////
-/// \brief Send a file that will be syncronized on all the clients
-///
-/// \param a_fileName the file name
-///
-/// \return The file in transfert, this is an async operation
-///
-////////////////////////////////////////////////////////////
-FileTransfer* Server::SyncronizeFile(const std::string& a_fileName)
-{
-	return new FileTransfer(a_fileName, this);
-}
-
-////////////////////////////////////////////////////////////
 /// \brief Receive and reflect a part of a file
 ///
 /// \param a_packet the packet that contains the part of the file
@@ -678,10 +668,15 @@ void Server::ReceiveFile(sf::Packet& a_packet, Connection* a_idUser)
 ///
 /// \param a_packet Some data of the file
 ///
+/// \param a_receiver The receiver, if NULL send it to everyone
+///
 ////////////////////////////////////////////////////////////
-void Server::SendPartialFile(sf::Packet& a_packet)
+void Server::SendPartialFile(sf::Packet& a_packet, Connection* a_receiver)
 {
-	SendPacket(a_packet);
+	if (a_receiver == NULL)
+		SendPacket(a_packet);
+	else
+		SendPacketToOneClient(a_packet, a_receiver);
 }
 
 
@@ -707,6 +702,36 @@ Connection* Server::GetIdFromName(std::string& a_name)
 	throw NetworkException("Error : Unable to find the requested ID!");
 }
 
+
+////////////////////////////////////////////////////////////
+/// \brief Add a file taht will be syncronized on each client 
+/// that will connect
+/// if the server.exe and the client.exe are in the same
+/// repertory, this will not append (because already here)
+///
+/// \param a_filePath the path of the file to syncronize
+///
+////////////////////////////////////////////////////////////
+void Server::AddSyncronizedFile(const std::string& a_filePath)
+{
+	// TODO : handle case where we get a new client while transfering a file
+	m_transferts.insert(new FileTransfer(a_filePath, this)); // send this new file to all currently connected clients
+}
+
+
+////////////////////////////////////////////////////////////
+/// \brief If a file was already be syncronized, but that
+/// it receive some important changes, this will resyncronize
+/// all the file on all clients
+
+/// \param a_filePath the path of the file to syncronize
+///
+////////////////////////////////////////////////////////////
+void Server::ResyncronizeFile(const std::string& a_filePath)
+{
+	// TODO : check if this initial transfert has already ended (because sending twice the same file at the same time is never a good idea)
+	m_transferts.insert(new FileTransfer(a_filePath, this)); // resend the file to all currently connected clients
+}
 
 ////////////////////////////////////////////////////////////
 /// \brief remove a UDP user from its ip address 
@@ -813,8 +838,15 @@ void Server::SyncroNewClient(Connection* a_newConnection)
 {
 	// TODO : make this initial syncronization as an indepandant thread for cases where there are lot of objects to send
 
+	/*
 	if (a_newConnection->m_isLocalHost) // we just ignore the initial syncro with localhost clients (in all case localhost clients are not supposed to arrived here)
 		return;
+	*/
+
+	for (const std::string& fileName : InternalComm::GetSyncronizedFiles()) // transfert all the files that must be syncronized to the new client
+	{
+		m_transferts.insert(new FileTransfer(fileName, this, a_newConnection));
+	}
 
 	// to avoid too large packet, we only send 10 objects per packet
 	int l_numberObject = NetworkObject::GetObjectList().size();
@@ -879,7 +911,7 @@ void Server::HandleNewTcpConnection()
 
 	l_connection->m_isUDPConnection = false;
 	l_connection->m_isConsideredAlive = true;
-	l_connection->m_isLocalHost = false;
+	l_connection->m_isLocalHost = l_connection->m_TCPSocket.getRemoteAddress().toInteger() == sf::IpAddress::getLocalAddress().toInteger() ? true : false;
 	// l_connection.m_ipAddress; // in TCP we don't care about ipAddress (for now)
 
 	RemoveUdpUserIfAny(l_connection->m_TCPSocket.getRemoteAddress()); // we make sure that the previous UDP connection on the same ip is deleted (why not let them both ?)

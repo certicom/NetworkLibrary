@@ -86,12 +86,26 @@ sf::UdpSocket& UdpHandler::GetUdpSocket()
 	return m_UdpSocket;
 }
 
-
+////////////////////////////////////////////////////////////
+/// \brief Lock the mutex that restrict the access to the
+/// socket that send data
+///
+/// We use wait mode since we do not really want to skip a 
+/// packet sending and most of the packet sending are done
+/// by threads
+///
+////////////////////////////////////////////////////////////
 void UdpHandler::WaitForLock()
 {
 	m_mutex.lock();
 }
 
+
+////////////////////////////////////////////////////////////
+/// \brief Unlock the mutex that restrict the access to the
+/// socket that send data
+///
+////////////////////////////////////////////////////////////
 void UdpHandler::Unlock()
 {
 	m_mutex.unlock();

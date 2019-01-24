@@ -1,8 +1,10 @@
-/.vs/
-/Debug/
-SimpleExample/Debug/
+/.vs
+/ipch
+/Debug
+/SimpleExample/Debug
 /NetworkLibrary/Debug
 /NetworkLibrary.VC.VC.opendb
 /NetworkLibrary.VC.db
 /NetworkLibrary/NetworkLibrary.vcxproj.user
-
+/NetworkLibrary/NetworkLibrary.vcxproj.filters
+/SimpleExample/SimpleExample.vcxproj.filters

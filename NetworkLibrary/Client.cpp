@@ -505,6 +505,29 @@ const std::map<std::string, FileTransfer*>& Client::GetReceivedFiles() const
 
 
 ////////////////////////////////////////////////////////////
+/// \brief Get if the client is fully syncronized with the
+/// server (files + objects)
+///
+/// \return if the client is fully syncronized with the server
+///
+////////////////////////////////////////////////////////////
+bool Client::IsReady() const
+{
+	// TODO : make this answer more accurate
+
+	if (!m_isConnected)
+		return false;
+
+	for (std::pair<std::string, FileTransfer*> transfert : m_receivedFiles)
+	{
+		if (!transfert.second->IsComplete())
+			return false;
+	}
+
+	return true;
+}
+
+////////////////////////////////////////////////////////////
 /// \brief Receive a part of a file
 ///
 /// \param a_packet the data for the part of the file
@@ -521,14 +544,23 @@ void Client::ReceiveFile(sf::Packet& a_packet)
 	if (l_startFile)
 	{
 		sf::Uint32 l_fileSize;
+		std::string l_originPath;
 
-		a_packet >> l_fileSize;
+		a_packet >> l_fileSize >> l_originPath;
 
-		m_receivedFiles[l_fileName] = new FileTransfer(l_fileName, l_fileSize); // TODO : handle the case where the file already exist
+		if (l_originPath == FileTransfer::GetExecutablePath() && m_server.m_isLocalHost)
+		{
+			m_receivedFiles[l_fileName] = NULL; // server.exe is at the same place than client.exe, so we do not replace it
+		}
+		else
+		{
+			m_receivedFiles[l_fileName] = new FileTransfer(l_fileName, l_fileSize); // TODO : handle the case where the file already exist
+		}
 	}
 	else
 	{
-		m_receivedFiles[l_fileName]->ReceivePacket(a_packet);
+		if(m_receivedFiles[l_fileName] != NULL)
+			m_receivedFiles[l_fileName]->ReceivePacket(a_packet);
 	}
 
 }

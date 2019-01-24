@@ -210,8 +210,32 @@ public:
 	///
 	/// \param a_packet Some data of the file
 	///
+	/// \param a_receiver The receiver, if NULL send it to everyone
+	///
 	////////////////////////////////////////////////////////////
-	void SendPartialFile(sf::Packet& a_packet);
+	void SendPartialFile(sf::Packet& a_packet, Connection* a_receiver);
+
+
+	////////////////////////////////////////////////////////////
+	/// \brief Add a file taht will be syncronized on each client 
+	/// that will connect
+	/// if the server.exe and the client.exe are in the same
+	/// repertory, this will not append (because already here)
+	///
+	/// \param a_filePath the path of the file to syncronize
+	///
+	////////////////////////////////////////////////////////////
+	void AddSyncronizedFile(const std::string& a_filePath);
+
+	////////////////////////////////////////////////////////////
+	/// \brief If a file was already be syncronized, but that
+	/// it receive some important changes, this will resyncronize
+	/// all the file on all clients
+
+	/// \param a_filePath the path of the file to syncronize
+	///
+	////////////////////////////////////////////////////////////
+	void ResyncronizeFile(const std::string& a_filePath);
 
 private:
 
@@ -383,16 +407,6 @@ private:
 	///
 	////////////////////////////////////////////////////////////
 	void HandleOldClients();
-
-	////////////////////////////////////////////////////////////
-	/// \brief Send a file that will be syncronized on all the clients
-	///
-	/// \param a_fileName the file name
-	///
-	/// \return The file in transfert, this is an async operation
-	///
-	////////////////////////////////////////////////////////////
-	FileTransfer* SyncronizeFile(const std::string& a_fileName);
 	
 	////////////////////////////////////////////////////////////
 	/// \brief Receive and reflect a part of a file
@@ -445,6 +459,8 @@ private:
 	bool m_isLocal;      ///< Flag to know if the server is local or internet
 	bool m_isListening;  ///< Flag to know if the server is currently listening (mean it brodcast and accept new connections)
 	bool m_isAutoAccept; ///< Flag to know if the server automatically accept new connections
+
+	std::unordered_set<FileTransfer*> m_transferts;		 ///< The list of all transfert currently active
 };
 
 }

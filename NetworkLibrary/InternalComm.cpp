@@ -26,6 +26,8 @@ std::vector<InfoServer*> InternalComm::s_availableServers; ///< The list of all 
 
 std::vector<InfoServer*> InternalComm::s_availableServersCustom; ///< Same list as s_availableServers, but store the result of the previous request for variable persistancy
 
+std::unordered_set<std::string> InternalComm::s_syncronizedFiles; ///< The list of all files that must be syncronized on all clients
+
 std::thread InternalComm::s_updateThread; ///< The stored update thread for update network objects
 
 bool InternalComm::s_canInstanciate = false; ///< Flag to know if a new network object can be instanciate (use safety)
@@ -134,6 +136,64 @@ void InternalComm::SetNewConnectionCallback(void(*a_newConnectionCallback)(Conne
 	s_newConnectionCallback = a_newConnectionCallback;
 }
 
+
+////////////////////////////////////////////////////////////
+/// \brief get the list of all files that must be syncronized
+///
+/// \return the list of all files that must be syncronized
+///
+////////////////////////////////////////////////////////////
+std::unordered_set<std::string>& InternalComm::GetSyncronizedFiles()
+{
+	return s_syncronizedFiles;
+}
+
+////////////////////////////////////////////////////////////
+/// \brief Add a file taht will be syncronized on each client 
+/// that will connect
+/// if the server.exe and the client.exe are in the same
+/// repertory, this will not append (because already here)
+///
+/// \param a_filePath the path of the file to syncronize
+///
+////////////////////////////////////////////////////////////
+void InternalComm::AddSyncronizedFile(const std::string& a_filePath)
+{
+
+	if (s_syncronizedFiles.find(a_filePath) == s_syncronizedFiles.end()) // since we check for duplicate, unordered_set is not really usefull, but what ever
+	{
+		s_syncronizedFiles.insert(a_filePath);
+		
+		if(s_server != NULL)
+			s_server->AddSyncronizedFile(a_filePath);
+	}
+	else
+	{
+		throw NetworkException("Error : This file was already syncronized, use ResyncronizeFile instead if you want to update it");
+	}
+}
+
+
+////////////////////////////////////////////////////////////
+/// \brief If a file was already be syncronized, but that
+/// it receive some important changes, this will resyncronize
+/// all the file on all clients
+
+/// \param a_filePath the path of the file to syncronize
+///
+////////////////////////////////////////////////////////////
+void InternalComm::ResyncronizeFile(const std::string& a_filePath)
+{
+	if (s_syncronizedFiles.find(a_filePath) != s_syncronizedFiles.end())
+	{
+		if (s_server != NULL)
+			s_server->ResyncronizeFile(a_filePath);
+	}
+	else
+	{
+		throw NetworkException("Error : Can not resyncronize a file that was not syncronized in a first place");
+	}
+}
 
 ////////////////////////////////////////////////////////////
 /// \brief Get if a server is running on this application

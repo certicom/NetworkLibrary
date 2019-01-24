@@ -79,9 +79,17 @@ Note that those constructors will be call from server side only !
 Note that this constructor will be call from client side to instanciate objects.  
 IMPORTANT with the default constructor, only the syncronized variables will be automatically initialized, you must initialize all the others manually.  
 
+#### Game files :
+In many cases you must make sure that all clients have the same file, for exemple the map of your game.  
+Since V0.6.7, you can simply use the function AddSyncronizedFile to do that.  
+If the file is modified after, like a game save you can also call the function ResyncronizeFile, that will udpate the file on all clients.  
+The file transferts will be done by asyncrone operations. To know if a client has fully received all files you can call the Client::IsReady function.  
+Note : You can syncronize your map by inheriting it from NetworkObject, however for large object it is strongly recommended to use files instead,
+for stability and asyncrone reasons.  
+
 #### More interface features :
 The client entity (and server soon) also provide many functions to know their current status.  
-(IsConnected, GetServerConnection, GetName, GetStats)  
+(IsConnected, IsReady, GetServerConnection, GetName, GetStats)  
 
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -99,6 +107,7 @@ FEATURES THAT WILL SOON BE ADDED :
  - Nice and simple way to not send data to all clients (In the anti cheat way)
  - Data transmission / reception per seconde
  - Thread for sending files
+ - Client function that return the current percentage of syncronization to allow making a loading bar
 
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -169,6 +178,7 @@ PROTOCOLS USED FOR COMMUNICATION AND TRANSMITTING OBJECTS :
  4 bool: has failed
  if start file    
  5 Uint32: file size
+ 6 String: exe path (avoiding replacing file when localhost)
  if not start file  
  5 char: all the file  
 

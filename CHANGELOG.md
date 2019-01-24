@@ -2,8 +2,8 @@
 
  Network Library for Games :
 
- date    : 01/23/2019
- version : V0.6.6
+ date    : 01/24/2019
+ version : V0.6.7
 
 ----------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------
@@ -27,15 +27,15 @@ Removed :
 
 ----------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------
-Minor Update V0.6.6
+Minor Update V0.6.7
 -------------------
 
 Added :
-- File transfert are now handle as async operation
+- User interface for simple file syncronization
+- For internal uses, file transferts can now be specific for one client
 
 Fixed :
 - File transfert is now correctly handle and can transfert large files
-
 
 
 
@@ -44,7 +44,6 @@ Fixed :
  New / discovered issues :
  ------------------------
 
- - Transfered files can only contains ascii caracters
  - Servers and clients crash when unexpeted disconnection
  - If a connection is refused, the client is still syncro before being disconnected
  - Disconnections crash the client (and the server ?)
